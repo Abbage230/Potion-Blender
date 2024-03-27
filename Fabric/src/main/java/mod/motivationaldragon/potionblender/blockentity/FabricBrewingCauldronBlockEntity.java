@@ -2,7 +2,6 @@ package mod.motivationaldragon.potionblender.blockentity;
 
 import mod.motivationaldragon.potionblender.blockentities.BrewingCauldronBlockEntity;
 import mod.motivationaldragon.potionblender.networking.BrewingCauldronInvSyncS2CPacket;
-import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -14,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class FabricBrewingCauldronBlockEntity extends BrewingCauldronBlockEntity implements RenderDataBlockEntity {
+public class FabricBrewingCauldronBlockEntity extends BrewingCauldronBlockEntity  {
 
     public FabricBrewingCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);

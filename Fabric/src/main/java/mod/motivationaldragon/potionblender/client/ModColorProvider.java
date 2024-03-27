@@ -19,7 +19,7 @@ public class ModColorProvider {
             assert view != null;
                 Object data =  view.getBlockEntityRenderData(pos);
 
-                if(data != null){return (int) data;}
+                if(data instanceof Integer){return (int) data;}
             return 3694022; // mc color code for water
             }, PotionBlenderBlock.BREWING_CAULDRON_BLOCK);
 

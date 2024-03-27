@@ -496,4 +496,6 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 			}
 		}
 	}
+
+
 }

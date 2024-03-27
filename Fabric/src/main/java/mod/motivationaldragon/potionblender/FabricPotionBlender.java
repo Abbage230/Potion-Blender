@@ -32,7 +32,7 @@ public class FabricPotionBlender implements ModInitializer {
 		OnUseBlockFabric.registerHandler();
 	}
 
-	private static <T> BiConsumer<T, ResourceLocation> bind(Registry<? super T> registry) {
+	public static <T> BiConsumer<T, ResourceLocation> bind(Registry<? super T> registry) {
 		return (t, id) -> Registry.register(registry, id, t);
 	}
 }
