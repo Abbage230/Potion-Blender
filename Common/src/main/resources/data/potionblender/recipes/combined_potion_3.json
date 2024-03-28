@@ -1,0 +1,25 @@
+{
+  "type" : "potionblender:potion_blending",
+  "brewingTime" : 140,
+  "usePotionMergingRules": true,
+  "color": 16711680,
+  "isOrdered": true,
+  "ingredients": [
+    {
+      "item": "minecraft:potion"
+    },
+    {
+      "item": "minecraft:potion"
+    },
+    {
+      "item": "minecraft:potion"
+    },
+    {
+      "item": "minecraft:nether_wart"
+    }
+  ],
+  "output" : {
+    "item" : "minecraft:potion",
+    "count" : 1
+  }
+}
