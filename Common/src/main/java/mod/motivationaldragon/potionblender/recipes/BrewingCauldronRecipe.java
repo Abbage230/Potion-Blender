@@ -102,7 +102,7 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 
 	@Override
 	public @NotNull RecipeType<?> getType() {
-		return PotionBlenderRecipes.POTION_BLENDING_RECIPE_TYPE;
+		return Type.INSTANCE;
 	}
 
 	@Override
@@ -113,6 +113,8 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 
 
 	public static class Type implements RecipeType<BrewingCauldronRecipe>{
+		public static final Type INSTANCE = new Type();
+		public static final String ID = "brewing_cauldron_recipe";
 	}
 
 	public static class CauldronRecipeSerializer implements RecipeSerializer<BrewingCauldronRecipe> {
@@ -132,7 +134,12 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 										return DataResult.error(() -> "No ingredients for brewing cauldron recipe");
 									}
 									return DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredientArr));
-								}, DataResult::success).forGetter(x-> x.ingredients),
+								}, DataResult::success).forGetter(x-> {
+									if(x.ingredients.size() > Constants.CAULDRON_INVENTORY_SIZE) {
+										throw new IllegalArgumentException("Too many ingredients for brewing cauldron recipe");
+									}
+									return x.ingredients;
+								}),
 
 
 						CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC.fieldOf("output").flatXmap(

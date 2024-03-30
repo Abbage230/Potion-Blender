@@ -8,7 +8,6 @@ import mod.motivationaldragon.potionblender.config.ConfigController;
 import mod.motivationaldragon.potionblender.config.PotionBlenderConfig;
 import mod.motivationaldragon.potionblender.platform.Service;
 import mod.motivationaldragon.potionblender.recipes.BrewingCauldronRecipe;
-import mod.motivationaldragon.potionblender.recipes.PotionBlenderRecipes;
 import mod.motivationaldragon.potionblender.utils.ModNBTKey;
 import mod.motivationaldragon.potionblender.utils.ModUtils;
 import mod.motivationaldragon.potionblender.utils.PotionEffectMerger;
@@ -87,7 +86,7 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 	/**
 	 * The cauldron inventory. It is mean to only contain potion
 	 */
-	private NonNullList<ItemStack> inventory = NonNullList.withSize(8, ItemStack.EMPTY);
+	private NonNullList<ItemStack> inventory = NonNullList.withSize(Constants.CAULDRON_INVENTORY_SIZE, ItemStack.EMPTY);
 	/**
 	 * The current amount of potion in the cauldron. Useful since the inventory size is constant
 	 */
@@ -103,7 +102,7 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 	protected BrewingCauldronBlockEntity(BlockPos pos, BlockState state) {
 		super(Service.PLATFORM.getPlatformBrewingCauldron(), pos, state);
 		this.numberOfItems = 0;
-		this.quickCheck = RecipeManager.createCheck(PotionBlenderRecipes.POTION_BLENDING_RECIPE_TYPE);
+		this.quickCheck = RecipeManager.createCheck(BrewingCauldronRecipe.Type.INSTANCE);
 	}
 
 	public NonNullList<ItemStack> getInventory() {
@@ -137,6 +136,7 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 	 * Useful to access data such as inventory attached to the block entity from {@link net.minecraft.world.level.block.Block} callback
 	 * T
 	 */
+	@SuppressWarnings("")
 	public void onUseDelegate(BlockState state, Level level, BlockPos pos, Player player) {
 		if (numberOfItems >= 1) {
 			stopBrewing();
