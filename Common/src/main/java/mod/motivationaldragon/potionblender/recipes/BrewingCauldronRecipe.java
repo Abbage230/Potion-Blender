@@ -23,11 +23,11 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 
 	private final boolean usePotionMergingRules;
 
-	private int color;
+	private final int color;
 
-	private double decayRate;
+	private final double decayRate;
 
-	private boolean isOrdered;
+	private final boolean isOrdered;
 	private final int brewingTime;
 
 	private final NonNullList<Ingredient> ingredients;
@@ -40,6 +40,12 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 								 double decayRate,
 	                             NonNullList<Ingredient> ingredients,
 			                     ItemStack output) {
+
+		//Disallow using usePotionMergingRules if the output is not a potion
+		if (usePotionMergingRules && !(output.getItem() instanceof PotionItem)) {
+			throw new IllegalArgumentException("Output must be a potion if usePotionMergingRules is true");
+		}
+
 		this.ingredients = ingredients;
 		this.brewingTime = brewingTime;
 		this.color = color;
@@ -53,13 +59,12 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 	public boolean matches(@NotNull Container container, @NotNull Level level) {
 		if(level.isClientSide()) {return false;}
 
-		//TODO DEBUG BROKEN CONDITION
 		if(isOrdered) {
 			//For each ingredient in ingredients, there is an item in the container that matches the ingredient at the same index
 			if(container.getContainerSize() != ingredients.size()) {return false;}
 			return IntStream.range(0, ingredients.size()).allMatch(i -> ingredients.get(i).test(container.getItem(i)));
 		} else {
-			//For each ingredients, there is at lease one item in the container that matches the ingredient
+			//For each ingredient, there is at lease one item in the container that matches the ingredient
 			if(container.getContainerSize() != ingredients.size()) {return false;}
 			return ingredients.stream().allMatch(ingredient -> IntStream.range(0, container.getContainerSize())
 					.anyMatch(i -> ingredient.test(container.getItem(i))));
@@ -134,10 +139,6 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 								itemStack -> {
 									if (itemStack.isEmpty()) {
 										return DataResult.error(() -> "Empty output for brewing cauldron recipe");
-									}
-									//Disallow using usePotionMergingRules if the output is not a potion
-									if (itemStack.getItem() instanceof PotionItem) {
-										return DataResult.error(() -> "Output is a potion but has no tag");
 									}
 									return DataResult.success(itemStack);
 								}, DataResult::success).forGetter(x->x.output)

@@ -43,7 +43,6 @@ public class BrewingCauldronRenderer<T extends BrewingCauldronBlockEntity> imple
 				float percentageOfInventoryIterated = ((float) i / inventory.size());
 				poseStack.translate(0.5, ModUtils.lerp(0.5f, 0.8f, percentageOfInventoryIterated), 0.5);
 				poseStack.scale(0.5f, 0.5f, 0.5f);
-				//TODO item rendering is broken
 				poseStack.mulPose(Axis.XP.rotationDegrees(90f));
 				poseStack.mulPose(Axis.ZP.rotationDegrees(i * 27f));
 				renderer.renderStatic(stack, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, brewingCauldronBlock.getLevel(), 0);

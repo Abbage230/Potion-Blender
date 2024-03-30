@@ -6,10 +6,10 @@
   "isOrdered": true,
   "ingredients": [
     {
-      "item": "minecraft:splash_potion"
+      "item": "minecraft:potion"
     },
     {
-      "item": "minecraft:splash_potion"
+      "item": "minecraft:potion"
     },
     {
       "item": "minecraft:gunpowder"

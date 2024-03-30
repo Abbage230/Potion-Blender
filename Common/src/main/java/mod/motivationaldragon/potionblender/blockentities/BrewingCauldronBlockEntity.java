@@ -242,8 +242,10 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 		} else {
 			Constants.LOG.error(
 					String.format("Cannot merge potion to an item that is not a potion. " +
-							"Valid potion are Potions, Splash Potions, Lingering Potion. Did you try to add an invalid recipe?" +
+							"Valid potion are Potions, Splash Potions, Lingering Potion. Did you try merge potion into an item that is not a potion?" +
 							"The item is: %s", potionToCraft.getItem()));
+			Containers.dropContents(level,pos,this.inventory);
+			emptyCauldron();
 			return;
 		}
 		List<MobEffectInstance> finalPotionStatusEffects = PotionEffectMerger.mergeCombinableEffects(this.getInventoryStatusEffectsInstances(), recipe.getDecayRate());

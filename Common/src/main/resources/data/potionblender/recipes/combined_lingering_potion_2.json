@@ -6,10 +6,10 @@
   "isOrdered": true,
   "ingredients": [
     {
-      "item": "minecraft:lingering_potion"
+      "item": "minecraft:potion"
     },
     {
-      "item": "minecraft:lingering_potion"
+      "item": "minecraft:potion"
     },
     {
       "item": "minecraft:dragon_breath"
