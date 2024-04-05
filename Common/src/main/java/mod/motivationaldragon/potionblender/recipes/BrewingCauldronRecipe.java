@@ -159,15 +159,15 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 
 		@Override
 		public @NotNull BrewingCauldronRecipe fromNetwork(FriendlyByteBuf buff) {
-			ItemStack output = buff.readItem();
+
 			int brewingTime = buff.readInt();
 			boolean usePotionMergingRules = buff.readBoolean();
 			int color  = buff.readInt();
 			boolean isOrdered = buff.readBoolean();
 			double decayRate = buff.readDouble();
 			NonNullList<Ingredient> ingredients = NonNullList.withSize(buff.readInt(), Ingredient.EMPTY);
-
 			ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buff));
+			ItemStack output = buff.readItem();
 			return new BrewingCauldronRecipe(brewingTime, usePotionMergingRules, color, isOrdered, decayRate, ingredients, output);
 		}
 

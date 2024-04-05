@@ -6,6 +6,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mod.motivationaldragon.potionblender.Constants;
 import mod.motivationaldragon.potionblender.recipes.BrewingCauldronRecipe;
+import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -15,32 +16,21 @@ import java.util.List;
 
 @JeiPlugin
 public class JEIPotionBlender implements IModPlugin {
-	/**
-	 * The unique ID for this mod plugin.
-	 * The namespace should be your mod's modId.
-	 */
-	@Override
-	public ResourceLocation getPluginUid() {
-		return new ResourceLocation(Constants.MOD_ID, "brewing_cauldron_jei8PLUGIN");
+
+	public JEIPotionBlender() {
+		Constants.LOG.info("JEI Plugin Loaded");
+		Minecraft.getInstance().delayCrash(CrashReport.forThrowable(new Exception("JEI Plugin Loaded"), "JEI Plugin Loaded"));
 	}
 
-	/**
-	 * Register the categories handled by this plugin.
-	 * These are registered before recipes so they can be checked for validity.
-	 *
-	 * @param registration
-	 */
+	@Override
+	public ResourceLocation getPluginUid() {
+		Constants.LOG.info("JEI Plugin UID: " + Constants.MOD_ID + "brewing_cauldron_jei_plugin");
+		return new ResourceLocation(Constants.MOD_ID, "brewing_cauldron_jei_plugin");
+	}
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		registration.addRecipeCategories(new BrewingCauldronJeiCategory(registration.getJeiHelpers().getGuiHelper()));
 	}
-
-
-	/**
-	 * Register modded recipes.
-	 *
-	 * @param registration
-	 */
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();

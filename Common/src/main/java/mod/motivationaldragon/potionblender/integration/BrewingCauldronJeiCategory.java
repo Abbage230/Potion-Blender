@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldronRecipe> {
 
@@ -39,7 +40,7 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * @since 9.5.0
 	 */
 	@Override
-	public RecipeType<BrewingCauldronRecipe> getRecipeType() {
+	public @NotNull RecipeType<BrewingCauldronRecipe> getRecipeType() {
 		return brewing_cauldron_recipe_type;
 	}
 
@@ -50,7 +51,7 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * @since 7.6.4
 	 */
 	@Override
-	public Component getTitle() {
+	public @NotNull Component getTitle() {
 		return Component.translatable("block.potionblender.brewing_cauldron");
 	}
 
@@ -58,7 +59,7 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * Returns the drawable background for a single recipe in this category.
 	 */
 	@Override
-	public IDrawable getBackground() {
+	public @NotNull IDrawable getBackground() {
 		return this.background;
 	}
 
@@ -70,7 +71,7 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * @return icon to draw on the category tab, max size is 16x16 pixels.
 	 */
 	@Override
-	public IDrawable getIcon() {
+	public @NotNull IDrawable getIcon() {
 		return this.icon;
 	}
 
@@ -90,7 +91,7 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * @since 9.3.0
 	 */
 	@Override
-	public void draw(BrewingCauldronRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+	public void draw(@NotNull BrewingCauldronRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
 		IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
 		RenderSystem.enableBlend();
 		RenderSystem.disableBlend();
@@ -106,15 +107,12 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 	 * @since 9.4.0
 	 */
 	@Override
-	public void setRecipe(IRecipeLayoutBuilder builder, BrewingCauldronRecipe recipe, IFocusGroup focuses) {
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(0));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(1));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(2));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(3));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(4));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(5));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(6));
-		builder.addSlot(RecipeIngredientRole.INPUT, 80, 11).addIngredients(recipe.getIngredients().get(7));
+	public void setRecipe(@NotNull IRecipeLayoutBuilder builder, BrewingCauldronRecipe recipe, @NotNull IFocusGroup focuses) {
+
+		for(int i = 0; i < recipe.getIngredients().size(); i++){
+			builder.addSlot(RecipeIngredientRole.INPUT, 1 + i * 18, 65).addIngredients(recipe.getIngredients().get(i));
+		}
+
 
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 65).addItemStack(recipe.getOutput());
 	}
