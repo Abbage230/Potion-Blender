@@ -32,6 +32,7 @@ public class BrewingCauldronRenderer<T extends BrewingCauldronBlockEntity> imple
 	private static final Material WATER_MATERIAL = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("block/water_still"));
 
 
+
 	@Override
 	public void render(T brewingCauldronBlock, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
@@ -53,7 +54,6 @@ public class BrewingCauldronRenderer<T extends BrewingCauldronBlockEntity> imple
 
 			// Code for rendering the transparent water in the cauldron
 			//Copied and adapted from https://github.com/maxoduke/Potion-Cauldron/tree/1.20.4/stable/common/src/main/java/dev/maxoduke/mods/potioncauldron/block under the MIT License
-
 			int waterColor = brewingCauldronBlock.getWaterColor();
 			int red = waterColor >> 16 & 255;
 			int green = waterColor >> 8 & 255;
@@ -71,10 +71,13 @@ public class BrewingCauldronRenderer<T extends BrewingCauldronBlockEntity> imple
 			float maxV = (water.getV1() - water.getV0()) * sizeFactor;
 			float minV = (water.getV1() - water.getV0()) * (1 - sizeFactor);
 
-			consumer.vertex(matrix, sizeFactor, 0, 1 - sizeFactor).color(red, green, blue, alpha).uv(water.getU0(), water.getV0() + maxV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
-			consumer.vertex(matrix, 1 - sizeFactor, 0, 1 - sizeFactor).color(red, green, blue, alpha).uv(water.getU1(), water.getV0() + maxV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
-			consumer.vertex(matrix, 1 - sizeFactor, 0, sizeFactor).color(red, green, blue, alpha).uv(water.getU1(), water.getV0() + minV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
-			consumer.vertex(matrix, sizeFactor, 0, sizeFactor).color(red, green, blue, alpha).uv(water.getU0(), water.getV0() + minV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
+			float cauldronFullness =((float)brewingCauldronBlock.getNumberOfItems() / brewingCauldronBlock.getInventory().size());
+			float height = -0.5F + cauldronFullness * 0.5F;
+
+			consumer.vertex(matrix, sizeFactor, height, 1 - sizeFactor).color(red, green, blue, alpha).uv(water.getU0(), water.getV0() + maxV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
+			consumer.vertex(matrix, 1 - sizeFactor, height, 1 - sizeFactor).color(red, green, blue, alpha).uv(water.getU1(), water.getV0() + maxV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
+			consumer.vertex(matrix, 1 - sizeFactor, height, sizeFactor).color(red, green, blue, alpha).uv(water.getU1(), water.getV0() + minV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
+			consumer.vertex(matrix, sizeFactor, height, sizeFactor).color(red, green, blue, alpha).uv(water.getU0(), water.getV0() + minV).uv2(packedLight).overlayCoords(packedOverlay).normal(1, 1, 1).endVertex();
 
 			poseStack.popPose();
 		}

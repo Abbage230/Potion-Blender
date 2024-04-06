@@ -98,6 +98,9 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 	private final RecipeManager.CachedCheck<Container, BrewingCauldronRecipe> quickCheck;
 
 
+	private int waterColor = Constants.WATER_TINT;
+
+
 
 	protected BrewingCauldronBlockEntity(BlockPos pos, BlockState state) {
 		super(Service.PLATFORM.getPlatformBrewingCauldron(), pos, state);
@@ -195,10 +198,10 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 				entity.remove(Entity.RemovalReason.DISCARDED);
 
 				canBrew = true;
-
+				this.waterColor = computeWaterColor();
 
 				getLevel().setBlockAndUpdate(getBlockPos(), getLevel().getBlockState(this.getBlockPos()).setValue(BrewingCauldron.IS_BREWING, true));
-
+				this.forceChunkUpdate();
 				this.setChanged();
 				level.playSound(null, this.getBlockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS);
 			}
@@ -337,10 +340,10 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 		inventory.clear();
 		numberOfItems = 0;
 
-		BlockState hasFluid = level.getBlockState(this.getBlockPos())
+		BlockState blockState = level.getBlockState(this.getBlockPos())
 				.setValue(BrewingCauldron.HAS_FLUID, false)
 				.setValue(BrewingCauldron.IS_BREWING, false);
-		level.setBlockAndUpdate(this.getBlockPos(), hasFluid);
+		level.setBlockAndUpdate(this.getBlockPos(), blockState);
 		updateListeners();
 	}
 
@@ -372,10 +375,11 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 
 		//add potion to cauldron inventory
 		addItem(itemEntity.getItem());
+		waterColor = computeWaterColor();
 
-		//Since we added a potion, the cauldron must now appear with fluid
-		BlockState mixerCauldronBlockState = level.getBlockState(this.getBlockPos()).setValue(BrewingCauldron.HAS_FLUID, true);
-		level.setBlockAndUpdate(this.getBlockPos(), mixerCauldronBlockState);
+		//If we add an item, the cauldron must now appear with fluid
+			BlockState mixerCauldronBlockState = level.getBlockState(this.getBlockPos()).setValue(BrewingCauldron.HAS_FLUID, true);
+			level.setBlockAndUpdate(this.getBlockPos(), mixerCauldronBlockState);
 
 		//To force re-rendering of the block tint
 		forceChunkUpdate();
@@ -425,40 +429,36 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 	public void load(@NotNull CompoundTag nbt) {
 		this.inventory = NonNullList.withSize(this.size(), ItemStack.EMPTY);
 		ContainerHelper.loadAllItems(nbt, this.inventory);
-		numberOfItems = nbt.getInt(POTION_MIXER_KEY);
+		this.numberOfItems = nbt.getInt(POTION_MIXER_KEY + "_inv_size");
 		this.isBrewing = nbt.getBoolean(POTION_MIXER_KEY + "_isBrewing");
 		this.canBrew = nbt.getBoolean(POTION_MIXER_KEY + "_canBrew");
-
+		this.waterColor = nbt.getInt(POTION_MIXER_KEY + "_waterColor");
 		super.load(nbt);
 	}
 
 	@Override
 	protected void saveAdditional(@NotNull CompoundTag nbt) {
 		ContainerHelper.saveAllItems(nbt, inventory);
-		nbt.putInt(POTION_MIXER_KEY, numberOfItems);
+		nbt.putInt(POTION_MIXER_KEY + "_inv_size", numberOfItems);
 		nbt.putBoolean(POTION_MIXER_KEY + "_isBrewing", isBrewing);
 		nbt.putBoolean(POTION_MIXER_KEY + "_canBrew", canBrew);
+		nbt.putInt(POTION_MIXER_KEY + "_waterColor", computeWaterColor());
 		super.saveAdditional(nbt);
 	}
 
-
 	public int getWaterColor() {
+		return waterColor;
+	}
 
-		//Todo: read the color from the recipe
-
-		var effects = getInventoryStatusEffectsInstances();
-		if (effects.isEmpty()) {
-			//return getColorFromInventoryItemsSprite();
-			return Constants.WATER_TINT;
+	private int computeWaterColor() {
+		var recipe =getRecipe();
+		if (recipe.isPresent()) {
+			return recipe.get().value().getColor();
 		} else {
-			return PotionUtils.getColor(effects);
+			return PotionUtils.getColor(getInventoryStatusEffectsInstances());
 		}
 	}
 
-	private int getColorFromInventoryItemsSprite() {
-		//TODO: Find a way to average the color of the item sprite
-		return Constants.WATER_TINT;
-	}
 
 	@Override
 	public @NotNull CompoundTag getUpdateTag() {
@@ -499,5 +499,7 @@ public abstract class BrewingCauldronBlockEntity extends BlockEntity {
 		}
 	}
 
-
+	public int getNumberOfItems() {
+		return numberOfItems;
+	}
 }

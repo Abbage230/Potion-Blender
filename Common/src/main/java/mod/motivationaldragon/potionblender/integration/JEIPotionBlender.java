@@ -6,7 +6,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mod.motivationaldragon.potionblender.Constants;
 import mod.motivationaldragon.potionblender.recipes.BrewingCauldronRecipe;
-import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -19,12 +18,10 @@ public class JEIPotionBlender implements IModPlugin {
 
 	public JEIPotionBlender() {
 		Constants.LOG.info("JEI Plugin Loaded");
-		Minecraft.getInstance().delayCrash(CrashReport.forThrowable(new Exception("JEI Plugin Loaded"), "JEI Plugin Loaded"));
 	}
 
 	@Override
 	public ResourceLocation getPluginUid() {
-		Constants.LOG.info("JEI Plugin UID: " + Constants.MOD_ID + "brewing_cauldron_jei_plugin");
 		return new ResourceLocation(Constants.MOD_ID, "brewing_cauldron_jei_plugin");
 	}
 	@Override
