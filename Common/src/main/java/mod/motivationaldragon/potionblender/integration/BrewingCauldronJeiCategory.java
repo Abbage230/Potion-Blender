@@ -92,7 +92,8 @@ public class BrewingCauldronJeiCategory implements IRecipeCategory<BrewingCauldr
 		}
 
 		for (int i = 0; i < recipe.getIngredients().size(); i++) {
-			builder.addSlot(RecipeIngredientRole.INPUT, 38 + i * 18, 4).addIngredients(recipe.getIngredients().get(i));
+			builder.addSlot(RecipeIngredientRole.INPUT, 38 + i * 18, 4)
+					.addIngredients(recipe.getIngredients().get(i));
 		}
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 74, 52).addItemStack(recipe.getOutput());
 	}

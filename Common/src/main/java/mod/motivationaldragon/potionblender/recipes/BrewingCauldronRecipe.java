@@ -7,6 +7,7 @@ import mod.motivationaldragon.potionblender.Constants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -44,6 +45,21 @@ public class BrewingCauldronRecipe implements Recipe<Container> {
 		//Disallow using usePotionMergingRules if the output is not a potion
 		if (usePotionMergingRules && !(output.getItem() instanceof PotionItem)) {
 			throw new IllegalArgumentException("Output must be a potion if usePotionMergingRules is true");
+		}
+
+		//At metadata to display potion item in JEI, otherwise it will display as an uncraftable potion
+		// Since test are performed on the item class, NBT data is not relevant and can be set to whatever we want
+		if(usePotionMergingRules){
+			for (Ingredient ingredient : ingredients) {
+				for (ItemStack stack : ingredient.getItems()) {
+					if ((stack.getItem() instanceof PotionItem)) {
+						stack.setHoverName(Component.translatable(Constants.MOD_ID + ".recipe.potion_wildcard_names"));
+						stack.enchant(null, 0);
+					}
+				}
+			}
+			output.setHoverName(Component.translatable(Constants.MOD_ID + ".recipe.merged_potion_wildcard_names"));
+			output.enchant(null, 0);
 		}
 
 		this.ingredients = ingredients;

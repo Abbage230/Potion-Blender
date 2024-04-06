@@ -20,6 +20,7 @@ dependencies {
 
     //Jei
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
     // at runtime, use the full JEI jar for Fabric
     modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
 
